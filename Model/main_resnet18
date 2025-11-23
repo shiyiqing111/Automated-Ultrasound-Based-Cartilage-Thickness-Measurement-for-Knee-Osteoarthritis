@@ -39,7 +39,7 @@ models_to_run = {
 #     pred_out = PRED_DIR / f"{model_name}_resnet18_unlabeled_pred.xlsx"
 #     PRED_DIR.mkdir(parents=True, exist_ok=True)
 #     df_pred.to_excel(pred_out, index=False)
-#     print(f"✅ Saved predictions: {pred_out}")
+#     print(f"Saved predictions: {pred_out}")
 
 # ======== Step 3: 多模型训练与预测（含RF / XGB参数优化） ========
 from sklearn.model_selection import GridSearchCV
@@ -53,7 +53,7 @@ for model_name, model_func in models_to_run.items():
     print(f"\n=== Training and Predicting with {model_name.upper()} ===")
 
     if model_name in ["rf", "xgb"]:
-        print(f"🔍 Performing parameter tuning for {model_name.upper()}...")
+        print(f"Performing parameter tuning for {model_name.upper()}...")
 
         if model_name == "rf":
             base_model = RandomForestRegressor(random_state=42, n_jobs=-1)
@@ -80,7 +80,7 @@ for model_name, model_func in models_to_run.items():
             }
 
         # GridSearchCV - 只用少量样本验证
-        print("⏳ Running GridSearchCV (5-fold)...")
+        print("Running GridSearchCV (5-fold)...")
         grid = GridSearchCV(
             base_model,
             param_grid,
@@ -94,7 +94,7 @@ for model_name, model_func in models_to_run.items():
         sub_idx = min(200, len(X_train))
         grid.fit(X_train[:sub_idx], Y_train[:sub_idx])
         best_model = grid.best_estimator_
-        print(f"✅ Best Params for {model_name.upper()}: {grid.best_params_}")
+        print(f"Best Params for {model_name.upper()}: {grid.best_params_}")
 
         optimized_params[model_name] = grid.best_params_
         model = best_model
@@ -120,13 +120,13 @@ for model_name, model_func in models_to_run.items():
     pred_out = PRED_DIR / f"{model_name}_resnet18_unlabeled_pred.xlsx"
     PRED_DIR.mkdir(parents=True, exist_ok=True)
     df_pred.to_excel(pred_out, index=False)
-    print(f"✅ Saved predictions: {pred_out}")
+    print(f"Saved predictions: {pred_out}")
 
 # 保存最优参数日志
 param_log_path = RESULT_DIR / "best_params_rf_xgb.json"
 with open(param_log_path, "w") as f:
     json.dump(optimized_params, f, indent=4)
-print(f"✅ Saved optimized parameters to: {param_log_path}")
+print(f"Saved optimized parameters to: {param_log_path}")
 
 
 # ======== Step 4: 评估并汇总 ========
@@ -190,7 +190,7 @@ for model_name in models_to_run.keys():
 summary_df = pd.DataFrame(summary_records)
 out_file = RESULT_DIR / "all_models_segment_summary.xlsx"
 summary_df.to_excel(out_file, index=False)
-print(f"\n✅ Saved combined summary to: {out_file}")
+print(f"\nSaved combined summary to: {out_file}")
 
-print("✅ Saved improved styled bar charts (MAE, RMSE, R2).")
+print("Saved improved styled bar charts (MAE, RMSE, R2).")
 
