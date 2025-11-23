@@ -27,7 +27,7 @@ def extract_and_save_features(apply_pca=True, pca_var=0.9):
     print(f"[DEBUG] Original feature dimension: {X_train.shape}")
 
     # ====== Step 2: standardization ======
-    print("🔹 Applying StandardScaler normalization...")
+    print("Applying StandardScaler normalization...")
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled  = scaler.transform(X_test)
